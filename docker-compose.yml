@@ -1,0 +1,58 @@
+# Three independent practice environments — one per service.
+# You normally don't `up` all of them; you run the one you need, e.g.
+#   docker compose run --rm php   php examples/01-intro.php
+#   docker compose run --rm golang go run ./cmd/01-intro
+#   docker compose up laravel      # then open http://localhost:8000
+#
+# Each service mounts its track's code so edits on your host run in-container.
+
+services:
+  # ---- Plain PHP 8.3 (OOP, SOLID, GoF patterns, pure-PHP DDD) ----
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: oop-patterns/php
+    container_name: oop-php
+    working_dir: /app
+    volumes:
+      - ./php-track/php-app:/app
+    tty: true
+    stdin_open: true
+    # Idle so `docker compose up php` stays alive for `exec`; for one-shot
+    # runs prefer `docker compose run --rm php php examples/<file>.php`.
+    command: ["tail", "-f", "/dev/null"]
+
+  # ---- Laravel (architecture + DDD/CQRS lessons) ----
+  laravel:
+    build:
+      context: .
+      dockerfile: docker/laravel/Dockerfile
+    image: oop-patterns/laravel
+    container_name: oop-laravel
+    working_dir: /app
+    volumes:
+      - ./php-track/laravel-app:/app
+    ports:
+      - "8000:8000"
+    # Entrypoint runs `composer install` + key:generate on first boot,
+    # then this command serves the app.
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+
+  # ---- Go 1.26 (Go-idiomatic versions of every topic) ----
+  golang:
+    build:
+      context: .
+      dockerfile: docker/golang/Dockerfile
+    image: oop-patterns/golang
+    container_name: oop-golang
+    working_dir: /app
+    volumes:
+      - ./go-track/go-app:/app
+      - go-build-cache:/root/.cache/go-build
+    tty: true
+    stdin_open: true
+    command: ["tail", "-f", "/dev/null"]
+
+volumes:
+  go-build-cache:

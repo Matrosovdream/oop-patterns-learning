@@ -1,0 +1,25 @@
+# ---- PHP ----
+/php-track/php-app/vendor/
+/php-track/php-app/composer.lock
+/php-track/laravel-app/vendor/
+/php-track/laravel-app/node_modules/
+/php-track/laravel-app/.env
+/php-track/laravel-app/storage/framework/cache/data/*
+/php-track/laravel-app/storage/framework/sessions/*
+/php-track/laravel-app/storage/framework/views/*
+/php-track/laravel-app/storage/logs/*
+/php-track/laravel-app/database/*.sqlite
+/php-track/laravel-app/bootstrap/cache/*.php
+
+# ---- Go ----
+/go-track/go-app/bin/
+*.test
+
+# ---- Editors / OS ----
+.idea/
+.vscode/
+.DS_Store
+*.log
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
